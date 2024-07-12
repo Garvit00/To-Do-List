@@ -9,7 +9,12 @@ app.set("view engine","ejs")
 
 const dbURL = "mongodb+srv://garvit:M32I7mu04Oas2SFE@to-do-list.l0rv6ko.mongodb.net/?retryWrites=true&w=majority&appName=To-Do-List";
 
-mongoose.connect(dbURL);
+mongoose.connect(dbURL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    tls: true,
+    tlsAllowInvalidCertificates: false // Make sure this is set appropriately
+})
 const itemSchema = {
     name: String
 }
