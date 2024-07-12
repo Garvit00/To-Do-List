@@ -7,7 +7,7 @@ app.use(bodyparser.urlencoded({extended:true}))
 app.use(express.static("public"))
 app.set("view engine","ejs")
 
-const dbURL = "mongodb+srv://garvit:M32I7mu04Oas2SFE@to-do-list.l0rv6ko.mongodb.net/?retryWrites=true&w=majority&appName=To-Do-List";
+const dbURL = "mongodb+srv://garvit:M32I7mu04Oas2SFE@to-do-list.l0rv6ko.mongodb.net/?retryWrites=true&w=majority&tls=true&appName=To-Do-List";
 
 mongoose.connect(dbURL, {
     useNewUrlParser: true,
