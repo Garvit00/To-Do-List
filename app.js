@@ -11,7 +11,13 @@ app.set("view engine","ejs")
 const port = process.env.PORT;
 const dbURL = process.env.MONGO_URI;
 
-mongoose.connect(dbURL);
+
+mongoose.connect(dbURL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    tls: true,
+    tlsAllowInvalidCertificates: false // Make sure this is set appropriately
+})
 const itemSchema = {
     name: String
 }
