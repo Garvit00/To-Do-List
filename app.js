@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express")
 const bodyparser = require("body-parser")
 const mongoose = require("mongoose")
@@ -7,7 +8,10 @@ app.use(bodyparser.urlencoded({extended:true}))
 app.use(express.static("public"))
 app.set("view engine","ejs")
 
-mongoose.connect("mongodb://127.0.0.1:27017/todolistDB");
+const port = process.env.PORT;
+const dbURL = process.env.MONGO_URI;
+
+mongoose.connect(dbURL);
 const itemSchema = {
     name: String
 }
@@ -89,17 +93,24 @@ app.post("/",function(req,res){
     if(listname === "Today" )
     {
         item.save()
-        res.redirect("/")
+        .then(() => res.redirect("/"))
+        .catch(err => console.error('Error saving item:', err));
+
     } else{
-        List.findOne({name:listname})
+       List.findOne({name:listname})
         .then(foundlist =>{
+            if(foundlist){
             foundlist.items.push(item)
-            foundlist.save();
-            res.redirect("/" + listname)
+            return foundlist.save();
+            } else {
+                console.error(`List with name ${listname} not found.`);
+                res.status(404).send('List not found');
+            }
         })
+        .then(() => res.redirect("/" + listname))
+        .catch(err => console.error('Error finding or saving list:', err));
     }
-   
-})
+});
 
 app.post("/delete",function(req,res){
     const deleteitem = req.body.checkbox
@@ -123,6 +134,6 @@ app.post("/delete",function(req,res){
     
 })
 
-app.listen(3000,function(){
+app.listen(port,function(){
     console.log("server is running at port 3000");
 })
